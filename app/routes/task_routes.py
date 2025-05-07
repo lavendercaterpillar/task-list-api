@@ -36,3 +36,30 @@ def get_all_tasks():
         tasks_response.append(task.to_dict())
 
     return tasks_response
+
+@tasks_bp.get("/<task_id>")
+def get_one_task(task_id):
+    task = validate_model(Task, task_id)
+
+    return task.to_dict()
+
+
+@tasks_bp.put("/<task_id>")
+def update_task(task_id):
+    task = validate_model(Task, task_id)
+    request_body = request.get_json()
+
+    task.update_from_dict(request_body)
+
+    db.session.commit()
+
+    return Response(status=204, mimetype="application/json")
+
+
+@tasks_bp.delete("/<task_id>")
+def delete_task(task_id):
+    task = validate_model(Task, task_id)
+    db.session.delete(task)
+    db.session.commit()
+
+    return Response(status=204, mimetype="application/json")
