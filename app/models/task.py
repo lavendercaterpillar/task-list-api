@@ -13,15 +13,22 @@ class Task(db.Model):
     completed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
 
+    # def to_dict(self):
+    #     task_as_dict = {}
+    #     task_as_dict["id"] = self.id
+    #     task_as_dict["title"] = self.title
+    #     task_as_dict["description"] = self.description
+    #     task_as_dict["completed_at"] = self.completed_at if self.completed_at else None 
+    #     return task_as_dict
+    #     # check last attr later for converting ISO to datetime
+    
     def to_dict(self):
-        task_as_dict = {}
-        task_as_dict["id"] = self.id
-        task_as_dict["title"] = self.title
-        task_as_dict["description"] = self.description
-        task_as_dict["completed_at"] = self.completed_at if self.completed_at else None 
-        # check last attr later for converting ISO to datetime
-
-        return task_as_dict
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "is_complete": self.completed_at is not None
+        }
 
 
     @classmethod

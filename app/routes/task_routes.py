@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, make_response, request  # additional imports for refactoring option 2
+from flask import Blueprint, Response, make_response, request, jsonify
 from app.models.task import Task
 from ..db import db
 from .helper import validate_model
@@ -10,10 +10,29 @@ def create_task():
     request_body = request.get_json()
     new_task = Task.from_dict(request_body)
 
-    # lines 18 and 19 are responsible for saving the new task to the database.
     db.session.add(new_task) 
     db.session.commit() 
 
-    # We need to convert response body back to JSON
-    response = new_task.to_dict()
-    return response, 201
+    return jsonify({"task": new_task.to_dict()}), 201
+
+@tasks_bp.get("")
+def get_all_tasks():
+
+    query = db.select(Task)
+
+    # title_param = request.args.get("title")
+    # if title_param:
+    #     query = query.where(Task.title.ilike(f"%{title_param}%"))
+
+    # description_param = request.args.get("description")
+    # if description_param:
+    #     query = query.where(Task.description.ilike(f"%{description_param}%"))
+
+    query = query.order_by(Task.id)
+    tasks = db.session.scalars(query)
+    
+    tasks_response = []
+    for task in tasks:
+        tasks_response.append(task.to_dict())
+
+    return tasks_response
