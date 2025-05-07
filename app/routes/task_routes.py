@@ -41,7 +41,7 @@ def get_all_tasks():
 def get_one_task(task_id):
     task = validate_model(Task, task_id)
 
-    return task.to_dict()
+    return jsonify({"task":task.to_dict()})
 
 
 @tasks_bp.put("/<task_id>")
