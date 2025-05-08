@@ -16,15 +16,14 @@ def get_all_tasks():
 
     query = db.select(Task)
 
-    # title_param = request.args.get("title")
-    # if title_param:
-    #     query = query.where(Task.title.ilike(f"%{title_param}%"))
+    sort_param = request.args.get("sort")
+    if sort_param == "asc":
+        query = query.order_by(Task.title.asc())
+    elif sort_param == "desc":
+        query = query.order_by(Task.title.desc())
+    else:
+        query = query.order_by(Task.id)
 
-    # description_param = request.args.get("description")
-    # if description_param:
-    #     query = query.where(Task.description.ilike(f"%{description_param}%"))
-
-    query = query.order_by(Task.id)
     tasks = db.session.scalars(query)
     
     tasks_response = []
