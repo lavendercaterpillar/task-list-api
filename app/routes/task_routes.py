@@ -2,16 +2,17 @@ from flask import Blueprint, Response, make_response, request, jsonify
 from app.models.task import Task
 from ..db import db
 from .helper import validate_model, create_model
+from datetime import datetime
 
-tasks_bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
+bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
 
-@tasks_bp.post("")
+@bp.post("")
 def create_task():
     request_body = request.get_json()
     model_dict, status = create_model(Task, request_body)
     return {"task": model_dict}, status
 
-@tasks_bp.get("")
+@bp.get("")
 def get_all_tasks():
 
     query = db.select(Task)
@@ -32,14 +33,14 @@ def get_all_tasks():
 
     return tasks_response
 
-@tasks_bp.get("/<task_id>")
+@bp.get("/<task_id>")
 def get_one_task(task_id):
     task = validate_model(Task, task_id)
 
     return jsonify({"task":task.to_dict()})
 
 
-@tasks_bp.put("/<task_id>")
+@bp.put("/<task_id>")
 def update_task(task_id):
     task = validate_model(Task, task_id)
     request_body = request.get_json()
@@ -51,10 +52,26 @@ def update_task(task_id):
     return Response(status=204, mimetype="application/json")
 
 
-@tasks_bp.delete("/<task_id>")
+@bp.delete("/<task_id>")
 def delete_task(task_id):
     task = validate_model(Task, task_id)
     db.session.delete(task)
     db.session.commit()
 
+    return Response(status=204, mimetype="application/json")
+
+
+@bp.patch("/<task_id>/mark_complete")
+def mark_complete(task_id):
+    task = validate_model(Task, task_id)
+    task.completed_at = datetime.now()
+    db.session.commit()
+    return Response(status=204, mimetype="application/json")
+
+
+@bp.patch("/<task_id>/mark_incomplete")
+def mark_incomplete(task_id):
+    task = validate_model(Task, task_id)
+    task.completed_at = None
+    db.session.commit()
     return Response(status=204, mimetype="application/json")
