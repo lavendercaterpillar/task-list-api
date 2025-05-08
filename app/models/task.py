@@ -20,7 +20,7 @@ class Task(db.Model):
     #     task_as_dict["description"] = self.description
     #     task_as_dict["completed_at"] = self.completed_at if self.completed_at else None 
     #     return task_as_dict
-    #     # check last attr later for converting ISO to datetime
+    #     # check last attr later for converting between ISO & datetime
     
     def to_dict(self):
 

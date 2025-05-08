@@ -17,7 +17,10 @@ def validate_model(cls, model_id):
 
     return model
 
-# to create a dictionary from a request body and return JSON of the dict and status code
+
+# Creates a dictionary form of a Class instance from a request body
+# and return JSON of the dict and status code
+
 def create_model(cls, model_data):
     try:
         new_model = cls.from_dict(model_data)

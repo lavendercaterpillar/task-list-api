@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 import requests
 
-bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
+bp = Blueprint("tasks", __name__, url_prefix="/tasks")
 
 @bp.post("")
 def create_task():
