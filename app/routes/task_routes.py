@@ -1,19 +1,15 @@
 from flask import Blueprint, Response, make_response, request, jsonify
 from app.models.task import Task
 from ..db import db
-from .helper import validate_model
+from .helper import validate_model, create_model
 
 tasks_bp = Blueprint("tasks_bp", __name__, url_prefix="/tasks")
 
 @tasks_bp.post("")
 def create_task():
     request_body = request.get_json()
-    new_task = Task.from_dict(request_body)
-
-    db.session.add(new_task) 
-    db.session.commit() 
-
-    return jsonify({"task": new_task.to_dict()}), 201
+    model_dict, status = create_model(Task, request_body)
+    return {"task": model_dict}, status
 
 @tasks_bp.get("")
 def get_all_tasks():

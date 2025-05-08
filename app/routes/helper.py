@@ -1,8 +1,6 @@
 from flask import abort,make_response
-from app.models.task import Task
 from ..db import db
 
-# Refactoring validate_book() to include any input model
 def validate_model(cls, model_id):
     try:
         model_id = int(model_id)
@@ -18,3 +16,18 @@ def validate_model(cls, model_id):
         abort(make_response(response, 404))
 
     return model
+
+# to create a dictionary from a request body and return JSON of the dict and status code
+def create_model(cls, model_data):
+    try:
+        new_model = cls.from_dict(model_data)
+        
+    except KeyError as error:
+        # response = {"message": f"Invalid request: missing {error.args[0]}"}
+        response = {"details": "Invalid data"}
+        abort(make_response(response, 400))
+    
+    db.session.add(new_model)
+    db.session.commit()
+
+    return new_model.to_dict(), 201

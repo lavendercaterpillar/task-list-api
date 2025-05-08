@@ -23,11 +23,12 @@ class Task(db.Model):
     #     # check last attr later for converting ISO to datetime
     
     def to_dict(self):
+
         return {
             "id": self.id,
             "title": self.title,
             "description": self.description,
-            "is_complete": self.completed_at is not None
+            "is_complete": bool(self.completed_at)
         }
 
 
@@ -36,9 +37,8 @@ class Task(db.Model):
         return cls(
             title=task_data["title"],
             description=task_data["description"],
-            completed_at=task_data["completed_at"]  # maybe None or ISO string
-        )
-    
+            completed_at=task_data.get("completed_at")  
+        )    
 
     def update_from_dict(self, task_data):
         if "title" in task_data:
