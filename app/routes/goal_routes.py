@@ -13,54 +13,6 @@ def create_goal():
     model_dict, status = create_model(Goal, request_body)
     return {"goal": model_dict}, status
 
-# My implementation
-# @bp.post("/<goal_id>/tasks")
-# def create_task_with_goal(goal_id):
-#     goal = validate_model(Goal, goal_id)
-    
-#     request_body = request.get_json()
-#     request_body["goal_id"] = goal.id
-
-#     try:
-#         new_task = Task.from_dict(request_body)
-
-#     except KeyError as error:
-#         response = {"message": f"Invalid request: missing {error.args[0]}"}
-#         abort(make_response(response, 400))
-        
-#     db.session.add(new_task)
-#     db.session.commit()
-
-#     response = new_task.to_dict()
-#     return jsonify({"task": response}), 201
-
-
-# Sending a list of Task IDs to Goal  GPT
-# @bp.route('/<goal_id>/tasks', methods=['POST'])
-# def assign_tasks_to_goal(goal_id):
-#     # Validate the goal exists
-#     goal = validate_model(Goal, goal_id)
-
-#     # Get and validate request body
-#     request_body = request.get_json()
-
-
-#     task_ids = request_body["task_ids"]
-    
-#     # Validate each task_id exists and update its goal_id
-#     updated_task_ids = []
-#     for task_id in task_ids:
-#         task = validate_model(Task, task_id)
-#         task.goal_id = goal.id
-#         updated_task_ids.append(task_id)
-
-#     db.session.commit()
-
-#     # Return the response in the exact format expected by tests
-#     return jsonify({
-#         "id": goal.id,
-#         "task_ids": updated_task_ids
-#     }), 200
 
 @bp.route('/<goal_id>/tasks', methods=['POST'])
 def add_tasks_to_goal(goal_id):
