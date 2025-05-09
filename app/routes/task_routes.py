@@ -84,7 +84,8 @@ def mark_complete(task_id):
     }
 
     # Send message to Slack
-    requests.post("https://slack.com/api/chat.postMessage", json=slack_message, headers=headers)    
+    requests.post("https://slack.com/api/chat.postMessage", json=slack_message, headers=headers)
+        
     return Response(status=204, mimetype="application/json")
 
 
